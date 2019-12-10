@@ -193,11 +193,11 @@ def bm2(fname) :
   print('stanfordnlp','sents=',len(ws))
 
 def bm() :
-
-  fname = 'examples/const.txt'
+  fname = 'examples/hindenburg.txt'
+  #fname = 'examples/const.txt'
   #fname = 'examples/einstein.txt'
   #fname = 'examples/tesla.txt'
-  for _ in range(3) :
+  for _ in range(10) :
     print(tm(lambda: bm1(fname), number=1))
     print(tm(lambda: bm2(fname), number=1))
 
