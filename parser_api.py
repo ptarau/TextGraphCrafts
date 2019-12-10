@@ -88,6 +88,7 @@ class StanTorch_API(NLP_API):
     sys.stdout=sout
     sys.stderr=serr
     # turn output on again
+    print('Created nlp pipeline!!!')
     return nlp
 
   nlp=start_pipeline()
