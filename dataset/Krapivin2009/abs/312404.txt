@@ -1,0 +1,1 @@
+In this paper we investigate optimal control problems governed by variational inequalities. We present a method for deriving optimality conditions in the form of Pontryagin's principle. The main tools used are the Ekeland's variational principle combined with penalization and spike variation techniques. 

@@ -1,0 +1,1 @@
+The Byrnes--Martin integral invariance principle for ordinary differential equations is extended to differential inclusions on {Bbb R}N.  The extended result is applied in demonstrating the existence of adaptive stabilizers and servomechanisms for a variety of nonlinear system classes. 
