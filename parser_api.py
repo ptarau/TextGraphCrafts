@@ -33,11 +33,11 @@ class CoreNLP_API(NLP_API):
   def __init__(self, text):
     super().__init__(text)
 
-    self.dparser = CoreNLPDependencyParser(url='http://localhost:9000')
+    dparser = CoreNLPDependencyParser(url='http://localhost:9000')
 
     # gss is a list of graph generators with
     # number of elements equal to the number of sentences
-    self.gss = list(self.dparser.parse_text(self.text))
+    self.gss = list(dparser.parse_text(self.text))
  
     self.get_triples()
     self.get_lemmas()
@@ -72,9 +72,29 @@ class CoreNLP_API(NLP_API):
 
 # subclass using  torch-based  stanfordnlp - Apache licensed
 class StanTorch_API(NLP_API):
+
+  def start_pipeline():
+    mfile = os.getenv("HOME") + \
+            '/stanfordnlp_resources/en_ewt_models'
+    sout=sys.stdout
+    serr=sys.stderr
+    f = open(os.devnull, 'w')
+    sys.stdout = f
+    sys.stderr = f
+    # turn output off - too noisy
+    if not os.path.exists(mfile):
+      stanfordnlp.download('en',confirm_if_exists=True)
+    nlp = stanfordnlp.Pipeline()
+    sys.stdout=sout
+    sys.stderr=serr
+    # turn output on again
+    return nlp
+
+  nlp=start_pipeline()
+
   def __init__(self, text):
     super().__init__(text)
-    self.doc=self.start_parser()
+    self.doc=self.start_parser(text)
 
   def get_triples(self):
     if not self.triples:
@@ -114,23 +134,18 @@ class StanTorch_API(NLP_API):
    self.get_words_and_lemmas()
    return self.lemmas
 
-  def start_parser(self):
-    mfile = os.getenv("HOME") + \
-            '/stanfordnlp_resources/en_ewt_models'
-    sout=sys.stdout
-    serr=sys.stderr
+  def start_parser(self,text):
+    sout = sys.stdout
+    serr = sys.stderr
     f = open(os.devnull, 'w')
     sys.stdout = f
     sys.stderr = f
     # turn output off - too noisy
-    if not os.path.exists(mfile):
-      stanfordnlp.download('en',confirm_if_exists=True)
-    nlp = stanfordnlp.Pipeline()
-    dparser = nlp(self.text)
+    self.dparser = StanTorch_API.nlp(text)
+    sys.stdout = sout
+    sys.stderr = serr
     # turn output on again
-    sys.stdout=sout
-    sys.stderr=serr
-    return dparser
+    return self.dparser
 
 def apply_api(api,fname) :
   with open(fname,'r') as f:
@@ -178,12 +193,14 @@ def bm2(fname) :
   print('stanfordnlp','sents=',len(ws))
 
 def bm() :
+
   fname = 'examples/const.txt'
-  fname = 'examples/einstein.txt'
-  fname = 'examples/tesla.txt'
-  #print(tm(lambda: bm1(fname), number=1))
-  print(tm(lambda: bm2(fname), number=1))
+  #fname = 'examples/einstein.txt'
+  #fname = 'examples/tesla.txt'
+  for _ in range(3) :
+    print(tm(lambda: bm1(fname), number=1))
+    print(tm(lambda: bm2(fname), number=1))
 
 #t1()
 #t2()
-bm()
+# bm()
