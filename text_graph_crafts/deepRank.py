@@ -610,9 +610,34 @@ class GraphMaker:
     def allToDot(self, k):
         self.toDot(k, lambda x: True)
 
+    def keyphrases(self, sk):
+        L = ['--- KEYPHRASES ---']
+        for w in self.bestWords(sk):
+            L.append(w + ';')
+        return '\n'.join(L)
+
+    def summary(self, sk):
+        L = ['--- SUMMARY ---']
+        for s in self.bestSentences(sk):
+            n, ws = s
+            L.append(f'{n} : ' + ''.join([' '+w for w in ws]))
+        return '\n'.join(L)
+
+    def relations(self, vk):
+        L = ['--- RELATIONS ---']
+        L.extend(list(map(str, self.bestSVOs(vk))))
+        return '\n'.join(L)
+
     def __repr__(self):
         s = []
         s.append('--- GraphMaker object ---')
+        s.append(f'nodes: {self.graph().number_of_nodes()}')
+        s.append(f'edges: {self.graph().number_of_edges()}')
+        s.append(self.keyphrases(5))
+        s.append(self.summary(5))
+        s.append(self.relations(5))
+        s.append(80*'-')
+        return '\n'.join(s)
 
 
 # yields cleaned-up words of sentences in g

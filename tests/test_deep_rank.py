@@ -12,17 +12,6 @@ from text_graph_crafts import GraphMaker
 def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
     gm = GraphMaker()
     gm.load(fileName)
-    # print("------PROCESSING:", fileName, "----------")
-    # print('noun_defs = ', noun_defs)
-    # print('all_recs = ', all_recs)
-    # print('nodes:', gm.graph().number_of_nodes())
-    # print('edges:', gm.graph().number_of_edges())
-    # print('')
-    # print_keys(gm.bestWords(wk))
-    # print('SUMMARY')
-    # print_summary(gm.bestSentences(sk))
-    # print_rels(gm.bestSVOs(vk))
-    # dotName = trimSuf(fileName)+".gv"
     dotName = os.path.splitext(fileName)[0]+".gv"
     gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
     return gm
