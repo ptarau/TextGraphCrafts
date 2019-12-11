@@ -247,8 +247,8 @@ class GraphMaker:
         for g in self.gs:
             yield tuple(glemmas(g))
 
-# curates, reverses and adds some new edges
-       # yields an <edge, sentence in which it occurs> pair
+    # curates, reverses and adds some new edges
+    # yields an <edge, sentence in which it occurs> pair
     def edgesInSent(self):
         self.svo_edges_in_graph = []
 
@@ -610,6 +610,11 @@ class GraphMaker:
     def allToDot(self, k):
         self.toDot(k, lambda x: True)
 
+    def __repr__(self):
+        s = []
+        s.append('--- GraphMaker object ---')
+
+
 # yields cleaned-up words of sentences in g
 
 
@@ -770,36 +775,6 @@ def to_svo(k, rs):
     return svo
 
 
-# shows wk summaries and sk keywords from file
-# extracts highest ranked dk svo relations  and visualizes
-# dk highest ranked filtered word to word edges as dot graph
-# if svo optional arg is set to True, adns svo links to the graph
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
-    gm = GraphMaker()
-    gm.load(fileName)
-
-    #for g in gm.gs : ppp(g)
-    # ppp(list(gm.sentence()))
-    # ppp(list(gm.lsentence()))
-    # ppp(list(gm.edges()))
-    #for g in gm.gs : ppp(list(g.triples()))
-    # ppp(gm.graph().edges())
-    #for p in gm.pagerank().items() : ppp(p)
-    print("------PROCESSING:", fileName, "----------")
-    print('noun_defs = ', noun_defs)
-    print('all_recs = ', all_recs)
-    print('nodes:', gm.graph().number_of_nodes())
-    print('edges:', gm.graph().number_of_edges())
-    print('')
-    print_keys(gm.bestWords(wk))
-    print('SUMMARY')
-    print_summary(gm.bestSentences(sk))
-    print_rels(gm.bestSVOs(vk))
-    dotName = trimSuf(fileName)+".gv"
-    gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
-    return gm
-
-
 # same, with default values
 def runWith(fileName):
     runWithFilter(fileName, 12, 8, 20, lambda x: True)
@@ -878,8 +853,6 @@ def justFname(path):
 def pdf2txt(fname):
     subprocess.run(["pdftotext", fname])
 
-# utilities
-
 
 def take(k, seq):
     c = 0
@@ -889,120 +862,6 @@ def take(k, seq):
         yield x
         c += 1
 
-# tests
-
-
-def test0():  # might talke 1-2 minutes
-    runWithFilter('examples/tesla.txt', wk, sk, 30, 50, maybeWord)
-
-
-def test1():
-    runWithFilter('examples/bfr.txt', wk, sk, 30, 50, maybeWord)
-
-
-def test2():
-    wk, sk = 3, 3
-    runWithFilter('examples/hindenburg.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test3():
-    runWithFilter('examples/const.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test4():
-    gm = runWithFilter('examples/summary.txt', 12, 3, 30, 50, maybeWord)
-    showAllEdges(gm)
-
-
-def test5():
-    runWithFilter('examples/heaven.txt', wk, sk, 30, 50, maybeWord)
-
-
-def test6():
-    runWithFilter('examples/einstein.txt', wk, sk, 30, 50, maybeWord)
-
-
-def test7():
-    runWithFilter('examples/kafka.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test8():
-    gm = runWithFilter('examples/test.txt', wk, sk, 20, 50, isAny, show=False)
-    showAllEdges(gm)
-
-
-def test9():
-    runWithFilter('examples/relativity.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test10():
-    runWithFilter('examples/cats.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test11():
-    runWithFilter('examples/wasteland.txt', wk, sk, 20, 50, maybeWord)
-
-
-def test12():
-    fname = "pdfs/textrank"
-    pdf2txt(fname+".pdf")
-    runWithFilter(fname+".txt", wk, sk, 20, 50, maybeWord)
-
-
-def testx():
-    gm = GraphMaker()
-    gm.digest('The cat sits near the cats on the mat.')
-    for g in gm.gs:
-        for e in g.triples():
-            print(e)
-    for f, ft, r, t, tt in gm.edges():
-            # ppp('!!!!!!',f,ft,r,t,tt)
-        print(f, '->', r, '->', t)
-    pr = gm.pagerank()
-    for w in pr.items():
-        print(w)
-    showAllEdges(gm)
-
-# interactive read, parse, show labeled edges loop
-
-
-def test():
-    gm = GraphMaker()
-    while(True):
-        s = input('sentence>: ')
-        if s == '':
-            break
-        ppp(s)
-        gm.digest(s)
-        gm.graph()
-        for g in gm.gs:
-            ppp(list(g.triples()))
-            ppp('----')
-        for f, ft, r, t, tt in gm.edges():
-            # ppp('!!!!!!',f,ft,r,t,tt)
-            print(f, '->', r, '->', t)
-        pr = gm.pagerank()
-        for x in pr.items():
-            ppp(x)
-
-
-# test()
-
-def go():
-    test1()
-    test2()
-    test3()
-    test4()
-    test5()
-    test6()
-    test7()
-    test8()
-    test9()
-    test10()
-    test11()
-
 
 if __name__ == '__main__':
     pass
-    # go()
-    # test10()
