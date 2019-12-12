@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
-from .parser_api import NLP_API, StanTorch_API
+from .parser_api import NLP_API, CoreNLP_API, StanTorch_API
 
 
 def ppp(*args): print(args)
@@ -26,8 +26,8 @@ def make_word_dict(fname):
         except:
             added = False
         return added
-    if add_from_file('words.txt'):
-        print('Added words.txt')
+    #if add_from_file('words.txt'):
+    #    print('Added words.txt')
     if add_from_file(fname):
         print('Domain-specific dictionary', fname, 'added.')
     return wd
@@ -183,9 +183,15 @@ def isAny(x):
 
 
 class GraphMaker:
-    def __init__(self, api_classname=NLP_API):
+    def __init__(self, api_classname=CoreNLP_API,file_name=None,text=None):
         self.api_classname = api_classname
         self.clear()
+        if file_name :
+          self.load(file_name)
+        elif text :
+          self.digest(text)
+        else :
+          print('text of file_name optional parameters missing')
 
     # # clear saved state
     def clear(self):
@@ -196,6 +202,9 @@ class GraphMaker:
         self.words2lemmas = set()
         self.noun_set = dict()
         self.svo_edges_in_graph = []
+        self.triples=None
+        self.words=None
+        self.lemmas=None
 
     # digest a file
     def load(self, fname):
@@ -893,5 +902,6 @@ def test1():
   #gm = runWithFilter('../examples/bfr.txt', wk, sk, 30, 50, maybeWord)
   #return gm
 
-  gm=GraphMaker('The cat sits on the mat.')
+  gm=GraphMaker(text='The cat sits on the mat.')
+  print(gm.triples)
 
