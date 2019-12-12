@@ -183,20 +183,19 @@ def isAny(x):
 
 
 class GraphMaker:
-    def __init__(self, api_classname):
+    def __init__(self, api_classname=NLP_API):
         self.api_classname = api_classname
-
-        # self.clear()
+        self.clear()
 
     # # clear saved state
-    # def clear(self):
-    #     self.maxcc = None
-    #     self.gs = None
-    #     self.nxgraph = None
-    #     self.ranked = None
-    #     self.words2lemmas = set()
-    #     self.noun_set = dict()
-    #     self.svo_edges_in_graph = []
+    def clear(self):
+        self.maxcc = None
+        self.gs = None
+        self.nxgraph = None
+        self.ranked = None
+        self.words2lemmas = set()
+        self.noun_set = dict()
+        self.svo_edges_in_graph = []
 
     # digest a file
     def load(self, fname):
@@ -211,9 +210,10 @@ class GraphMaker:
 
     # digest a string using dependecy parser
     def digest(self, text):
+        self.clear()
         self.api = self.api_classname(text)
         self.triples, self.lemmas, self.words = self.api.get_all()
-        # self.clear()
+        #
         # chop = 2**16
         # gens = []
         # # deals with files that are too large to be parse at once
@@ -889,6 +889,9 @@ def take(k, seq):
         yield x
         c += 1
 
+def test1():
+  #gm = runWithFilter('../examples/bfr.txt', wk, sk, 30, 50, maybeWord)
+  #return gm
 
-if __name__ == '__main__':
-    pass
+  gm=GraphMaker('The cat sits on the mat.')
+
