@@ -7,6 +7,7 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
+from .parser_api import NLP_API, StanTorch_API
 
 
 def ppp(*args): print(args)
@@ -182,61 +183,62 @@ def isAny(x):
 
 
 class GraphMaker:
-    def __init__(self):
-        # uses Stanford Parser on defaul port 9000 - see params.py
-        self.dparser = CoreNLPDependencyParser(url=parserURL)
-        self.clear()
+    def __init__(self, api_classname):
+        self.api_classname = api_classname
 
-    # clear saved state
-    def clear(self):
-        self.maxcc = None
-        self.gs = None
-        self.nxgraph = None
-        self.ranked = None
-        self.words2lemmas = set()
-        self.noun_set = dict()
-        self.svo_edges_in_graph = []
+        # self.clear()
+
+    # # clear saved state
+    # def clear(self):
+    #     self.maxcc = None
+    #     self.gs = None
+    #     self.nxgraph = None
+    #     self.ranked = None
+    #     self.words2lemmas = set()
+    #     self.noun_set = dict()
+    #     self.svo_edges_in_graph = []
 
     # digest a file
     def load(self, fname):
-        self.clear()
-        f = open(fname, 'r')
-        text = f.read()
-        f.close()
+        # self.clear()
+        with open(fname, 'r') as f:
+            text = f.read()
         self.digest(text)
 
-    def parse(self, text):
-        ts = self.dparser.parse_text(text)
-        return list(ts)
+    # def parse(self, text):
+    #     ts = self.dparser.parse_text(text)
+    #     return list(ts)
 
     # digest a string using dependecy parser
     def digest(self, text):
-        self.clear()
-        chop = 2**16
-        gens = []
-        # deals with files that are too large to be parse at once
-        while len(text) > chop:
-            head = text[:chop]
-            text = text[chop:]
-            # ppp((head))
-            if head:
-                hs = list(self.parse(head))
-                # ppp('PARSED')
-                gens.append(hs)
-        if gens:
-            self.gs = [x for xs in gens for x in xs]
-        else:
-            self.gs = list(self.parse(text))
+        self.api = self.api_classname(text)
+        self.triples, self.lemmas, self.words = self.api.get_all()
+        # self.clear()
+        # chop = 2**16
+        # gens = []
+        # # deals with files that are too large to be parse at once
+        # while len(text) > chop:
+        #     head = text[:chop]
+        #     text = text[chop:]
+        #     # ppp((head))
+        #     if head:
+        #         hs = list(self.parse(head))
+        #         # ppp('PARSED')
+        #         gens.append(hs)
+        # if gens:
+        #     self.gs = [x for xs in gens for x in xs]
+        # else:
+        #     self.gs = list(self.parse(text))
         # ppp('!!!',self.gs)
 
     # sentence as sequence of words generator
     def sentence(self):
         for g in self.gs:
-            yield str.join(' ', list(gwords(g)))
+            yield str.join(' ', self.words)
 
     def wsentence(self):
         for g in self.gs:
-            yield tuple(gwords(g))
+            yield tuple(self.words)
 
     def nth_sent_words(self, n):
         ws = tuple(gwords(self.gs[n]))
