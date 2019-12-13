@@ -191,7 +191,7 @@ class GraphMaker:
         elif text :
           self.digest(text)
         else :
-          print('*** text of file_name optional parameters missing')
+          print('*** text OR file_name optional parameter missing')
 
     # # clear saved state
     def clear(self):
@@ -266,7 +266,7 @@ class GraphMaker:
             #make_noun_set(g, self.noun_set, k)
             svo_edges_in_sent = []
             for triple in self.triples()[k]:
-                ppp('TRIPLE',triple)
+                #ppp('TRIPLE',triple)
                 fr, rel, to = triple
                 lfrom, ftag = d[fr[0]]
                 lto, ttag = d[to[0]]
@@ -400,14 +400,17 @@ class GraphMaker:
             return
         #ppp('BEST SENTS:',best)
         c = 0
+        print("IIIIIIII", best)
         for i in best:
+
             if not filter(i):
                 continue
-            g = self.gs[i]
-            ts,lems,ws=g
+            #g = self.gs[i]
+            #ts,lems,ws,ps=g
             # ppp('LEMS',lems)
+            lems=self.lemmas()[i]
             if isCleanSent(lems):
-                sent = ws
+                sent = self.words()[i]
                 #sent=str.join(' ',list(gwords(g)))
                 yield (i, sent)
                 c += 1
@@ -719,7 +722,6 @@ def w2l(wss,lss,pss,k):
         p =  pss[k][i]
         if(w):
             d[w] = (l, p)
-    print('DDDDDDD',d)
     return d
 
 # adds to given dict d nouns in nodes of g
