@@ -773,8 +773,7 @@ def to_svo(k, rs):
 # dk highest ranked filtered word to word edges as dot graph
 # if svo optional arg is set to True, adns svo links to the graph
 def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
-  gm = GraphMaker()
-  gm.load(fileName)
+  gm = GraphMaker(file_name=fileName)
 
   # for g in gm.gs : ppp(g)
   # ppp(list(gm.sentence()))

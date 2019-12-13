@@ -20,8 +20,64 @@ def testx():
     for w in pr.items(): print(w)
     #showAllEdges(gm)
 
+wk,sk=6,6
+
 def test1() :
-  wk,sk=6,6
   deepRank.runWithFilter('examples/bfr.txt',wk,sk,30,50,deepRank.maybeWord)
 
-test1()
+
+def test0():  # might talke 1-2 minutes
+  runWithFilter('examples/tesla.txt', wk, sk, 30, 50, deepRank.maybeWord)
+
+
+def test1():
+  deepRank.runWithFilter('examples/bfr.txt', wk, sk, 30, 50, deepRank.maybeWord)
+
+
+def test2():
+  wk, sk = 3, 3
+  deepRank,runWithFilter('examples/hindenburg.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test3():
+  deepRank.runWithFilter('examples/const.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test4():
+  gm = deepRank.runWithFilter('examples/summary.txt', 12, 3, 30, 50, deepRank.maybeWord)
+  showAllEdges(gm)
+
+
+def test5():
+  deepRank.runWithFilter('examples/heaven.txt', wk, sk, 30, 50, deepRank.maybeWord)
+
+
+def test6():
+  deepRank.runWithFilter('examples/einstein.txt', wk, sk, 30, 50, deepRank.maybeWord)
+
+
+def test7():
+  deepRank.runWithFilter('examples/kafka.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test8():
+  gm = deepRank.runWithFilter('examples/test.txt', wk, sk, 20, 50, isAny, show=False)
+  showAllEdges(gm)
+
+
+def test9():
+  deepRank.runWithFilter('examples/relativity.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test10():
+  deepRank.runWithFilter('examples/cats.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test11():
+  deepRank.runWithFilter('examples/wasteland.txt', wk, sk, 20, 50, deepRank.maybeWord)
+
+
+def test12():
+  fname = "pdfs/textrank"
+  pdf2txt(fname + ".pdf")
+  deepRank.runWithFilter(fname + ".txt", wk, sk, 20, 50, deepRank.maybeWord)

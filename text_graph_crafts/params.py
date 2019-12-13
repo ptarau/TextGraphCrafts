@@ -5,6 +5,7 @@ import math
 
 parserURL='http://localhost:9000'
 abstractive='no'
+pics='yes'
 
 ## for EVALUATION
 
@@ -41,7 +42,7 @@ max_answers=3
 repeat_answers='yes'
 by_rank='yes'
 personalize=50
-pics='no'
+
 
 # formula for adjusting rank of long or short sentences
 def adjust_rank(rank,length,avg) :
