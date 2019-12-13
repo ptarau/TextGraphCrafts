@@ -26,8 +26,8 @@ def make_word_dict(fname):
         except:
             added = False
         return added
-    #if add_from_file('words.txt'):
-    #    print('Added words.txt')
+    if add_from_file('words.txt'):
+       print('Added words.txt')
     if add_from_file(fname):
         print('Domain-specific dictionary', fname, 'added.')
     return wd
@@ -263,7 +263,7 @@ class GraphMaker:
         def edgeOf(k):
             d = w2l(self.words(),self.lemmas(),self.tags(),k)
             #merge_dict(self.words2lemmas, d)
-            #make_noun_set(g, self.noun_set, k)
+            make_noun_set(self.noun_set,self.lemmas(),self.tags(),k)
             svo_edges_in_sent = []
             for triple in self.triples()[k]:
                 #ppp('TRIPLE',triple)
@@ -400,7 +400,6 @@ class GraphMaker:
             return
         #ppp('BEST SENTS:',best)
         c = 0
-        print("IIIIIIII", best)
         for i in best:
 
             if not filter(i):
@@ -466,9 +465,10 @@ class GraphMaker:
         for w in best:
             if c >= k:
                 break
+            #ppp('GOOD WORD', w)
             if not isStopWord(w) and self.hasNoun(w):
                 yield(w)
-                # ppp('BWORD',w)
+                #ppp('BWORD',w)
             c += 1
 
     # true if a phrase has a noun in it
@@ -727,14 +727,15 @@ def w2l(wss,lss,pss,k):
 # adds to given dict d nouns in nodes of g
 
 
-def make_noun_set(g, d, k):
-    for v in g.nodes.values():
-        w = v.get('lemma')
-        p = v.get('tag')
-        if(v) and isNoun(p):
-            if not w in d:
-                d[w] = k
-                # ppp('NOUN',w,k)
+def make_noun_set(d,lss,pss, k):
+    ln = len(lss[k])
+    for i in range(ln):
+      l = lss[k][i]
+      p = pss[k][i]
+      if(l) and isNoun(p):
+        if not l in d:
+          d[l] = k
+          #ppp('NOUN!!!!',l,k)
 
 
 def merge_dict(tuples, d):

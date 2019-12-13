@@ -204,6 +204,8 @@ def t2():
     print('')
     print(p.get_words())
     print('')
+    print(p.get_tags())
+    print('')
 
 # benchmark
 
