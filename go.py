@@ -97,5 +97,5 @@ def go() :
   test12()
 
 if __name__ == '__main__'  :
-  go()
-  #test10()
+  #go()
+  test8()

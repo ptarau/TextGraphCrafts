@@ -7,6 +7,8 @@ parserURL='http://localhost:9000'
 abstractive='no'
 pics='yes'
 
+
+
 ## for EVALUATION
 
 # sets max s number of documents to be processed, all if None

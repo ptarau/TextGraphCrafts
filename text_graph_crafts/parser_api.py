@@ -5,8 +5,8 @@ import sys
 from abc import ABC, abstractmethod
 from timeit import timeit as tm
 
-# nlp toolkit plugin - abstract class
 
+# nlp toolkit plugin - abstract class
 
 class NLP_API(ABC):
     def __init__(self, text):
@@ -36,7 +36,6 @@ class NLP_API(ABC):
         return self.get_triples(), self.get_lemmas(), self.get_words(), self.get_tags()
 
 # subclass using Stanford coreNLP
-
 
 class CoreNLP_API(NLP_API):
     def __init__(self, text):
@@ -87,8 +86,6 @@ class CoreNLP_API(NLP_API):
       return self.tags
 
 # subclass using  torch-based  stanfordnlp - Apache licensed
-
-'''
 class StanTorch_API(NLP_API):
 
     def start_pipeline():
@@ -120,6 +117,8 @@ class StanTorch_API(NLP_API):
             for s in self.doc.sentences:
                 ts = []
                 for dep_edge in s.dependencies:
+                    if dep_edge[1]=='root' :
+                      continue # compatibility with coreNLP
                     source = (dep_edge[0].text, dep_edge[0].pos)
                     target = (dep_edge[2].text, dep_edge[2].pos)
                     t = (source,  dep_edge[1], target)
@@ -129,11 +128,11 @@ class StanTorch_API(NLP_API):
                 self.tuples = tss
         return self.tuples
 
-    def get_words_and_lemmas(self):
+    def get_words_lemmas_tags(self):
         if not self.lemmas or not self.words:
             wss = []
             lss = []
-            #pss = []
+            pss = []
             for s in self.doc.sentences:
                 ws = []
                 ls = []
@@ -141,20 +140,25 @@ class StanTorch_API(NLP_API):
                 for w in s.words:
                     ws.append(w.text)
                     ls.append(w.lemma)
-                    #ps,append(w.tag)
+                    ps.append(w.xpos)
                 wss.append(ws)
                 lss.append(ls)
-                pss.append(ps
+                pss.append(ps)
             self.words = wss
             self.lemmas = lss
+            self.tags=pss
 
     def get_words(self):
-        self.get_words_and_lemmas()
+        self.get_words_lemmas_tags()
         return self.words
 
     def get_lemmas(self):
-        self.get_words_and_lemmas()
+        self.get_words_lemmas_tags()
         return self.lemmas
+
+    def get_tags(self):
+        self.get_words_lemmas_tags()
+        return self.tags
 
     def start_parser(self, text):
         sout = sys.stdout
@@ -168,7 +172,9 @@ class StanTorch_API(NLP_API):
         sys.stderr = serr
         # turn output on again
         return self.dparser
-'''
+
+toolkit=StanTorch_API
+#toolkit=CoreNLP_API
 
 def apply_api(api, fname):
     with open(fname, 'r') as f:
@@ -178,6 +184,7 @@ def apply_api(api, fname):
 
 
 def t1():
+    if not toolkit == 'core_nlp': return
     print('with coreNLP')
     print('')
     text = 'The happy cat sleeps. The dog just barks today.'
@@ -194,6 +201,7 @@ def t1():
 
 
 def t2():
+    if not toolkit == 'stanfordnlp': return
     print('with stanfordnlp - torch based')
     print('')
     text = 'The happy cat sleeps. The dog just barks today.'
@@ -232,5 +240,5 @@ def bm():
         print(tm(lambda: bm2(fname), number=1))
 
 # t1()
-# t2()
+t2()
 # bm()

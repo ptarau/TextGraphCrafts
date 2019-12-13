@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
-from .parser_api import NLP_API, CoreNLP_API #, StanTorch_API
+from .parser_api import toolkit #CoreNLP_API, StanTorch_API
 
 
 def ppp(*args): print(args)
@@ -183,7 +183,7 @@ def isAny(x):
 
 
 class GraphMaker:
-    def __init__(self, api_classname=CoreNLP_API,file_name=None,text=None):
+    def __init__(self, api_classname=toolkit,file_name=None,text=None):
         self.api_classname = api_classname
         self.clear()
         if file_name :
@@ -266,7 +266,7 @@ class GraphMaker:
             make_noun_set(self.noun_set,self.lemmas(),self.tags(),k)
             svo_edges_in_sent = []
             for triple in self.triples()[k]:
-                #ppp('TRIPLE',triple)
+                ppp('TRIPLE',triple)
                 fr, rel, to = triple
                 lfrom, ftag = d[fr[0]]
                 lto, ttag = d[to[0]]
