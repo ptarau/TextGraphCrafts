@@ -27,7 +27,7 @@ def test1() :
 
 
 def test0():  # might talke 1-2 minutes
-  runWithFilter('examples/tesla.txt', wk, sk, 30, 50, deepRank.maybeWord)
+  deepRank.runWithFilter('examples/tesla.txt', wk, sk, 30, 50, deepRank.maybeWord)
 
 
 def test1():
@@ -36,7 +36,7 @@ def test1():
 
 def test2():
   wk, sk = 3, 3
-  deepRank,runWithFilter('examples/hindenburg.txt', wk, sk, 20, 50, deepRank.maybeWord)
+  deepRank.runWithFilter('examples/hindenburg.txt', wk, sk, 20, 50, deepRank.maybeWord)
 
 
 def test3():
@@ -45,7 +45,7 @@ def test3():
 
 def test4():
   gm = deepRank.runWithFilter('examples/summary.txt', 12, 3, 30, 50, deepRank.maybeWord)
-  showAllEdges(gm)
+
 
 
 def test5():
@@ -61,8 +61,7 @@ def test7():
 
 
 def test8():
-  gm = deepRank.runWithFilter('examples/test.txt', wk, sk, 20, 50, isAny, show=False)
-  showAllEdges(gm)
+  gm = deepRank.runWithFilter('examples/test.txt', wk, sk, 20, 50, deepRank.isAny, show=False)
 
 
 def test9():
@@ -79,5 +78,24 @@ def test11():
 
 def test12():
   fname = "pdfs/textrank"
-  pdf2txt(fname + ".pdf")
+  deepRank.pdf2txt(fname + ".pdf")
   deepRank.runWithFilter(fname + ".txt", wk, sk, 20, 50, deepRank.maybeWord)
+
+def go() :
+  #test0()
+  test1()
+  test2()
+  test3()
+  test4()
+  test5()
+  test6()
+  test7()
+  test8()
+  #test9()
+  test10()
+  test11()
+  test12()
+
+if __name__ == '__main__'  :
+  go()
+  #test10()
