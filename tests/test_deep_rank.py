@@ -102,24 +102,4 @@ def testx():
     showAllEdges(gm)
     return gm
 
-# interactive read, parse, show labeled edges loop
 
-
-def test():
-    gm = GraphMaker()
-    while(True):
-        s = input('sentence>: ')
-        if s == '':
-            break
-        ppp(s)
-        gm.digest(s)
-        gm.graph()
-        for g in gm.gs:
-            ppp(list(g.triples()))
-            ppp('----')
-        for f, ft, r, t, tt in gm.edges():
-            # ppp('!!!!!!',f,ft,r,t,tt)
-            print(f, '->', r, '->', t)
-        pr = gm.pagerank()
-        for x in pr.items():
-            ppp(x)

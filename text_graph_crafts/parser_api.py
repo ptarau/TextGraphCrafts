@@ -14,6 +14,7 @@ class NLP_API(ABC):
         self.triples = None
         self.lemmas = None
         self.words = None
+        self.tags=None
 
     @abstractmethod
     def get_triples(self):
@@ -27,8 +28,12 @@ class NLP_API(ABC):
     def get_words(self):
         pass
 
+    @abstractmethod
+    def get_tags(self):
+      pass
+
     def get_all(self):
-        return self.get_triples(), self.get_lemmas(), self.get_words()
+        return self.get_triples(), self.get_lemmas(), self.get_words(), self.get_tags()
 
 # subclass using Stanford coreNLP
 
@@ -46,6 +51,7 @@ class CoreNLP_API(NLP_API):
         self.get_triples()
         self.get_lemmas()
         self.get_words()
+        self.get_tags()
 
     def get_triples(self):
         if not self.triples:
@@ -60,6 +66,7 @@ class CoreNLP_API(NLP_API):
             ns = list(gs.nodes.items())
             ws = [None]*(len(ns)-1)
             for k, v in ns:
+                #print("WORDDICT",v)
                 ws[k-1] = v[key]
             wss.append(ws)
         return wss
@@ -74,9 +81,14 @@ class CoreNLP_API(NLP_API):
             self.words = CoreNLP_API._extract_key(self.gss, 'word')
         return self.words
 
+    def get_tags(self):
+      if not self.tags:
+        self.tags = CoreNLP_API._extract_key(self.gss, 'tag')
+      return self.tags
+
 # subclass using  torch-based  stanfordnlp - Apache licensed
 
-
+'''
 class StanTorch_API(NLP_API):
 
     def start_pipeline():
@@ -121,14 +133,18 @@ class StanTorch_API(NLP_API):
         if not self.lemmas or not self.words:
             wss = []
             lss = []
+            #pss = []
             for s in self.doc.sentences:
                 ws = []
                 ls = []
+                ps = []
                 for w in s.words:
                     ws.append(w.text)
                     ls.append(w.lemma)
+                    #ps,append(w.tag)
                 wss.append(ws)
                 lss.append(ls)
+                pss.append(ps
             self.words = wss
             self.lemmas = lss
 
@@ -152,7 +168,7 @@ class StanTorch_API(NLP_API):
         sys.stderr = serr
         # turn output on again
         return self.dparser
-
+'''
 
 def apply_api(api, fname):
     with open(fname, 'r') as f:

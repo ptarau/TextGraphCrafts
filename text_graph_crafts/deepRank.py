@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
-from .parser_api import NLP_API, CoreNLP_API, StanTorch_API
+from .parser_api import NLP_API, CoreNLP_API #, StanTorch_API
 
 
 def ppp(*args): print(args)
@@ -191,7 +191,7 @@ class GraphMaker:
         elif text :
           self.digest(text)
         else :
-          print('text of file_name optional parameters missing')
+          print('*** text of file_name optional parameters missing')
 
     # # clear saved state
     def clear(self):
@@ -202,26 +202,29 @@ class GraphMaker:
         self.words2lemmas = set()
         self.noun_set = dict()
         self.svo_edges_in_graph = []
-        self.triples=None
-        self.words=None
-        self.lemmas=None
+
+    def triples(self):
+       return self.gs[0]
+
+    def lemmas(self):
+      return self.gs[1]
+
+    def words(self):
+        return self.gs[2]
+
+    def tags(self):
+      return self.gs[3]
 
     # digest a file
     def load(self, fname):
-        # self.clear()
         with open(fname, 'r') as f:
             text = f.read()
         self.digest(text)
 
-    # def parse(self, text):
-    #     ts = self.dparser.parse_text(text)
-    #     return list(ts)
-
     # digest a string using dependecy parser
     def digest(self, text):
         self.clear()
-        self.api = self.api_classname(text)
-        self.triples, self.lemmas, self.words = self.api.get_all()
+        self.gs = self.api_classname(text).get_all()
         #
         # chop = 2**16
         # gens = []
@@ -242,21 +245,9 @@ class GraphMaker:
 
     # sentence as sequence of words generator
     def sentence(self):
-        for g in self.gs:
-            yield str.join(' ', self.words)
+        for ws in self.words() :
+            yield str.join(' ', ws)
 
-    def wsentence(self):
-        for g in self.gs:
-            yield tuple(self.words)
-
-    def nth_sent_words(self, n):
-        ws = tuple(gwords(self.gs[n]))
-        return ws
-
-    # sentence as sequence of lemmas generator
-    def lsentence(self):
-        for g in self.gs:
-            yield tuple(glemmas(g))
 
     # curates, reverses and adds some new edges
     # yields an <edge, sentence in which it occurs> pair
@@ -269,16 +260,17 @@ class GraphMaker:
                 if k == k_:
                     yield (x, tx, 'first_in', k, 'SENT')
 
-        def edgeOf(k, g):
-            d = w2l(g)
-            merge_dict(self.words2lemmas, d)
-            make_noun_set(g, self.noun_set, k)
+        def edgeOf(k):
+            d = w2l(self.words(),self.lemmas(),self.tags(),k)
+            #merge_dict(self.words2lemmas, d)
+            #make_noun_set(g, self.noun_set, k)
             svo_edges_in_sent = []
-            for ts in g.triples():
-                # ppp('TRIPLES',ts)
-                fr, rel, to = list(ts)
+            for triple in self.triples()[k]:
+                ppp('TRIPLE',triple)
+                fr, rel, to = triple
                 lfrom, ftag = d[fr[0]]
                 lto, ttag = d[to[0]]
+
                 # vn is True it is an s->v or o->v link
                 so = isSubj(rel) or isObj(rel)
                 vn = isVerb(ftag) and isNoun(ttag) and so
@@ -321,13 +313,12 @@ class GraphMaker:
                         yield comp, ttag, 'self', comp, ttag
             # collect svo relations
             self.svo_edges_in_graph.append(to_svo(k, svo_edges_in_sent))
-        k = 0
-        for g in self.gs:
-            for e in edgeOf(k, g):
+
+        for k in range(len(self.triples())):
+            for e in edgeOf(k):
                 # collects words at the two ends of e
                 # self.addWordsIn(e)
                 yield e, k
-            k += 1
 
     # yields  the edge. possibly for each sentence where is found
     def multi_edges(self):
@@ -413,10 +404,10 @@ class GraphMaker:
             if not filter(i):
                 continue
             g = self.gs[i]
-            lems = [w for w in glemmas0(g)]
+            ts,lems,ws=g
             # ppp('LEMS',lems)
             if isCleanSent(lems):
-                sent = list(gwords(g))
+                sent = ws
                 #sent=str.join(' ',list(gwords(g)))
                 yield (i, sent)
                 c += 1
@@ -492,7 +483,7 @@ class GraphMaker:
         # ppp("PR",d)
 
         # normalize sentence ranks by favoring those close to average rank
-        sents = list(self.wsentence())
+        sents = self.words()
         lens = list(map(len, sents))
         #ppp('LENS:', lens)
         avg = sum(lens) / len(lens)
@@ -716,56 +707,19 @@ def sent_words(gm):
         ctr += 1
 
 
-def word_orbit(gm):
-    orbit = defaultdict(list)
-    for (s, ws) in sent_words(gm):
-        for w in ws:
-            orbit[w].append(s)
-    return orbit
-
-
-def word_graph(g, pr, s_ws):
-    pr = dict(pr)
-    s, ws0 = s_ws
-    ws = [w for w in ws0 if not isStopWord(w)]
-    l = len(ws)
-    for i in range(0, l-1):
-        f = ws[i]
-        t = ws[i+1]
-        r1 = pr.get(f)
-        if not r1:
-            r1 = pr.get(f.lower())
-        r2 = pr.get(t)
-        if not r2:
-            r2 = pr.get(f.lower())
-        if not r1:
-            r1 = 0
-        if not r2:
-            r2 = 0
-        r = 0
-        if not r1:
-            r = r2
-        elif not r2:
-            r = r1
-        else:
-            r = (r1+r2)/2  # we will be looking for shortest
-        if r == 0:
-            r = float('inf')
-        else:
-            r = math.exp(1-r)
-        g.add_edge(f, t, weight=r)
-        # print("EDGE",(f,t,r))
 
 
 # returns a dict of lemmas for word nodes in in g
-def w2l(g):
+def w2l(wss,lss,pss,k):
     d = dict()
-    for v in g.nodes.values():
-        w = v.get('word')
-        l = v.get('lemma')
-        p = v.get('tag')
+    ln = len(wss[k])
+    for i in range(ln) :
+        w = wss[k][i]
+        l = lss[k][i]
+        p =  pss[k][i]
         if(w):
             d[w] = (l, p)
+    print('DDDDDDD',d)
     return d
 
 # adds to given dict d nouns in nodes of g
@@ -809,6 +763,36 @@ def to_svo(k, rs):
             svo.append((s[vt], vt, o[vt], k))  # k=sent where found
     #for x in svo : ppp(k,'GOT SVO',x)
     return svo
+
+
+# shows wk summaries and sk keywords from file
+# extracts highest ranked dk svo relations  and visualizes
+# dk highest ranked filtered word to word edges as dot graph
+# if svo optional arg is set to True, adns svo links to the graph
+def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
+  gm = GraphMaker()
+  gm.load(fileName)
+
+  # for g in gm.gs : ppp(g)
+  # ppp(list(gm.sentence()))
+  # ppp(list(gm.lsentence()))
+  # ppp(list(gm.edges()))
+  # for g in gm.gs : ppp(list(g.triples()))
+  # ppp(gm.graph().edges())
+  # for p in gm.pagerank().items() : ppp(p)
+  print("------PROCESSING:", fileName, "----------")
+  print('noun_defs = ', noun_defs)
+  print('all_recs = ', all_recs)
+  print('nodes:', gm.graph().number_of_nodes())
+  print('edges:', gm.graph().number_of_edges())
+  print('')
+  print_keys(gm.bestWords(wk))
+  print('SUMMARY')
+  print_summary(gm.bestSentences(sk))
+  print_rels(gm.bestSVOs(vk))
+  dotName = trimSuf(fileName) + ".gv"
+  gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
+  return gm
 
 
 # same, with default values
@@ -897,11 +881,4 @@ def take(k, seq):
             return
         yield x
         c += 1
-
-def test1():
-  #gm = runWithFilter('../examples/bfr.txt', wk, sk, 30, 50, maybeWord)
-  #return gm
-
-  gm=GraphMaker(text='The cat sits on the mat.')
-  print(gm.triples)
 
