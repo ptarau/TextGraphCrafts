@@ -82,7 +82,7 @@ def test12():
   deepRank.runWithFilter(fname + ".txt", wk, sk, 20, 50, deepRank.maybeWord)
 
 def go() :
-  #test0()
+  test0()
   test1()
   test2()
   test3()
@@ -91,7 +91,7 @@ def go() :
   test6()
   test7()
   test8()
-  #test9()
+  test9()
   test10()
   test11()
   test12()

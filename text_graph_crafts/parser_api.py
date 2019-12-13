@@ -43,9 +43,30 @@ class CoreNLP_API(NLP_API):
 
         dparser = CoreNLPDependencyParser(url='http://localhost:9000')
 
+        def parse(text) :
+          return dparser.parse_text(text)
+
         # gss is a list of graph generators with
         # number of elements equal to the number of sentences
-        self.gss = list(dparser.parse_text(self.text))
+
+        chop = 2 ** 16
+        gens = []
+
+        while len(text) > chop:
+          head = text[:chop]
+          text = text[chop:]
+          # ppp((head))
+          if head:
+            hs = list(parse(head))
+            # ppp('PARSED')
+            gens.append(hs)
+        if gens:
+          self.gss = [x for xs in gens for x in xs]
+        else:
+          self.gss = list(parse(text))
+
+
+        #self.gss = list(dparser.parse_text(self.text))
 
         self.get_triples()
         self.get_lemmas()
@@ -173,9 +194,6 @@ class StanTorch_API(NLP_API):
         # turn output on again
         return self.dparser
 
-toolkit=StanTorch_API
-#toolkit=CoreNLP_API
-
 def apply_api(api, fname):
     with open(fname, 'r') as f:
         ls = f.readlines()
@@ -184,7 +202,6 @@ def apply_api(api, fname):
 
 
 def t1():
-    if not toolkit == 'core_nlp': return
     print('with coreNLP')
     print('')
     text = 'The happy cat sleeps. The dog just barks today.'
@@ -201,7 +218,6 @@ def t1():
 
 
 def t2():
-    if not toolkit == 'stanfordnlp': return
     print('with stanfordnlp - torch based')
     print('')
     text = 'The happy cat sleeps. The dog just barks today.'

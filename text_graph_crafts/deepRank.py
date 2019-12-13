@@ -7,8 +7,10 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
-from .parser_api import toolkit #CoreNLP_API, StanTorch_API
+from .parser_api import CoreNLP_API, StanTorch_API
 
+if corenlp: toolkit=CoreNLP_API
+else: toolkit=StanTorch_API
 
 def ppp(*args): print(args)
 
@@ -266,7 +268,7 @@ class GraphMaker:
             make_noun_set(self.noun_set,self.lemmas(),self.tags(),k)
             svo_edges_in_sent = []
             for triple in self.triples()[k]:
-                ppp('TRIPLE',triple)
+                #ppp('TRIPLE',triple)
                 fr, rel, to = triple
                 lfrom, ftag = d[fr[0]]
                 lto, ttag = d[to[0]]

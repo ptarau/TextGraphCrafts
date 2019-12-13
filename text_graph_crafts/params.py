@@ -5,7 +5,8 @@ import math
 
 parserURL='http://localhost:9000'
 abstractive='no'
-pics='yes'
+pics='no'
+corenlp=True
 
 
 
