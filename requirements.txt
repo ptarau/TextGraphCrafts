@@ -1,0 +1,4 @@
+graphviz==0.13
+stanfordnlp==0.2.0
+nltk==3.4.5
+networkx==2.3

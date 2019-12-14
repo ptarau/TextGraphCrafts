@@ -255,6 +255,7 @@ def bm():
         print(tm(lambda: bm1(fname), number=1))
         print(tm(lambda: bm2(fname), number=1))
 
-# t1()
-t2()
-# bm()
+if __name__ == '__main__':
+    # t1()
+    t2()
+    # bm()
