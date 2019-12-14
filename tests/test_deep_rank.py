@@ -1,17 +1,29 @@
 import os
 from text_graph_crafts.deepRank import maybeWord
-from text_graph_crafts.params import *
 from text_graph_crafts import GraphMaker
+from text_graph_crafts.params import *
 
-# shows wk summaries and sk keywords from file
-# extracts highest ranked dk svo relations  and visualizes
-# dk highest ranked filtered word to word edges as dot graph
-# if svo optional arg is set to True, adns svo links to the graph
+def go() :
+  gm = GraphMaker(text='The cat sits on the mat.')
+  print(gm.triples())
+  print(gm.lemmas())
+  print(gm.words())
+  print(gm.tags())
 
 
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
-    gm = GraphMaker()
-    gm.load(fileName)
+# interactive read, parse, show labeled edges loop
+def testx():
+    gm= GraphMaker(text='The cat walks. The dog barks.')
+    for g in gm.gs:
+      print(g)
+    for f, ft, r, t, tt in gm.edges():
+      print(f, '->', r, '->', t)
+    pr = gm.pagerank()
+    for w in pr.items(): print(w)
+
+
+def runWithFilter(fileName, wk, sk, dk, vk, filter, show=True):
+    gm = GraphMaker(file_name=fileName)
     dotName = os.path.splitext(fileName)[0]+".gv"
     gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
     return gm
@@ -89,8 +101,7 @@ def test12():
 
 
 def testx():
-    gm = GraphMaker()
-    gm.digest('The cat sits near the cats on the mat.')
+    gm = GraphMaker(text='The cat sits near the cats on the mat.')
     for g in gm.gs:
         for e in g.triples():
             print(e)
@@ -101,5 +112,3 @@ def testx():
         print(w)
     showAllEdges(gm)
     return gm
-
-
