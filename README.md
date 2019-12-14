@@ -25,10 +25,7 @@ to collect the desired nltk resource files.
 - ```pip3 install networkx```
 - ```pip3 install requests```
 - ```pip3 install graphviz```, also ensure .gv files can be viewed
-- ````pip3 install py-rouge```, needed for evaluation
-- install [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) and unzip in local directory
-- edit if needed ```start_parser.sh``` with the location of the parser directory.
-- install SWI-Prolog, make sure "swipl" is in your path (only needed for the Dialog Agent), summary and keyphrase extraction and evaluation works without that 
+- ```pip3 install stanfordnlp``` parser
 
 Tested with the above on a Mac, with macOS Mojave and Catalina and on Ubuntu Linux 18.x.
 
@@ -41,7 +38,7 @@ Tested with the above on a Mac, with macOS Mojave and Catalina and on Ubuntu Lin
 
 or by typing 
 
-```go```
+```python3 -i go.py```
 
 to launch a script doing the same. 
 
@@ -52,6 +49,8 @@ to launch a script doing the same.
 >>> test2()
 >>> ...
 >>> test9()
+>>> test12()
+>>> test0()
 ```
 
 #### see how to activate other outputs in file 
@@ -62,14 +61,6 @@ to launch a script doing the same.
 
 ```examples/```
 
-There are two new additions.
-
-The first evaluates keyword and summary extraction and it is activated with 
-
-```python3 -i eval.py```
-
-or the shorthand script ```ego``` followed with ```go``` at the Python prompt. See eval.py for setting some parameters like test or production mode and sizes of abstract and keyphrases sets.
- 
  
 ### Handling PDF documents
 
@@ -81,4 +72,13 @@ already in subdirectory pdfs/ and try something similar to:
 Change setting in file params.py to use the system with
 other global parameter settings.
 
+### Alternative NLP toolkit
+
+*Optionally*, you can activate the alternative Stanford CoreNLP toolkit as follows:
+
+- install [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) and unzip in a derictory of your choice (ag., the local directory)
+- edit if needed ```start_parser.sh``` with the location of the parser directory
+- edit params.py and set ```corenlp=True```
+
+*Note however that the Stanford CoreNLP is GPL-licensed, which can place restrictions on proprietary software activating this option.*
 
