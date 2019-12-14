@@ -1,30 +1,7 @@
 import subprocess
 from sys import platform
-
-import atexit
 import os
-import sys
 from setuptools import setup
-from setuptools.command.install import install
-
-class CustomInstall(install):
-    """
-    https://exceptionshub.com/post-install-script-with-python-setuptools.html
-    """
-    def run(self):
-        def _post_install():
-            import nltk
-            import ssl
-            try:
-                _create_unverified_https_context = ssl._create_unverified_context
-            except AttributeError:
-                pass
-            else:
-                ssl._create_default_https_context = _create_unverified_https_context
-            nltk.download()
-        atexit.register(_post_install)
-        install.run(self)
-
 
 if __name__ == '__main__':
 
@@ -54,7 +31,26 @@ if __name__ == '__main__':
             print(f'version = {version}')
 
 
-    setup(name='text_graph_crafts',
+    def _post_install(setup):
+        def _post_actions():
+            print ('--- Post install ---')
+            import nltk
+            import platform
+            if platform.system()=='darwin':
+                try:
+                    import ssl
+                    _create_unverified_https_context = ssl._create_unverified_context
+                except AttributeError:
+                    pass
+                else:
+                    ssl._create_default_https_context = _create_unverified_https_context
+            nltk.download()
+
+        _post_actions()
+        return setup
+
+    setup = _post_install(
+          setup(name='text_graph_crafts',
           version=version,
           description='DeepRank Model: a deep learning approach to relevance ranking in information retrieval ',
           long_description = long_description,
@@ -65,4 +61,6 @@ if __name__ == '__main__':
           packages=['text_graph_crafts'],
           install_requires = required,
           zip_safe=False,
-          cmdclass={'install': CustomInstall})
+          setup_requires = ['nltk'],
+          )
+)
