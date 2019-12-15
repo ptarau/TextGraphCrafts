@@ -99,14 +99,12 @@ def test12():
 
 
 def testx():
-    gm = GraphMaker(text='The cat sits near the cats on the mat.')
-    for g in gm.gs:
-        for e in g.triples():
+    gm = GraphMaker(text='The cat sits. The dog barks.')
+    for e in gm.triples():
             print(e)
     for f, ft, r, t, tt in gm.edges():
         print(f, '->', r, '->', t)
     pr = gm.pagerank()
     for w in pr.items():
         print(w)
-    showAllEdges(gm)
     return gm
