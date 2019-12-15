@@ -266,7 +266,7 @@ class GraphMaker:
 
         def edgeOf(k):
             d = w2l(self.words(),self.lemmas(),self.tags(),k)
-            #merge_dict(self.words2lemmas, d)
+            merge_dict(self.words2lemmas, d)
             make_noun_set(self.noun_set,self.lemmas(),self.tags(),k)
             svo_edges_in_sent = []
             for triple in self.triples()[k]:
@@ -281,6 +281,7 @@ class GraphMaker:
                 if rel == 'punct' and ttag == '.':
                     # sentence points to predicate verb
                     yield (k, 'SENT', 'predicate', lfrom, ftag)
+                #elif rel == 'punct' : continue
                 elif vn:
                     # collects vs and vo links to merge them later into svo
                     svo_edges_in_sent.append((lfrom, ftag, rel, lto, ttag))
@@ -649,14 +650,6 @@ class GraphMaker:
         return '\n'.join(s)
 
 
-# yields cleaned-up words of sentences in g
-
-
-def gwords(g):
-    for (i, w, l, p) in gsent(g):
-        yield w
-
-
 def fix_par(w):
     u = w.upper()
     if u == '-LRB-':
@@ -670,50 +663,11 @@ def fix_par(w):
     else:
         return w
 
-# trims all bat lemmas and thir tags
-
-
-def glemmas(g):
-    for (i, w, l, p) in gsent(g):
-        yield (l, p)
-
-# trims all bat lemmas
-
-
-def glemmas0(g):
-    for (i, w, l, p) in gsent(g):
-        yield l
-
-# returns list of position,word,lemma,POS-tag tuples
-
-
-def gsent(g):
-    ws = []
-    for v in g.nodes.values():
-        i = v.get('address')
-        w = v.get('word')
-        l = v.get('lemma')
-        p = v.get('tag')
-        if(w):
-            ws.append((i, fix_par(w), fix_par(l), p))
-    ws.sort()
-    return ws
-
-
 def pers_dict(qgm):
     return dict(
         (w, r) for (w, r) in qgm.pagerank().items()
         if maybeWord(w) and not isStopWord(w)
     )
-
-
-def sent_words(gm):
-    ctr = 0
-    for g in gm.gs:
-        yield (ctr, list(gwords(g)))
-        ctr += 1
-
-
 
 
 # returns a dict of lemmas for word nodes in in g

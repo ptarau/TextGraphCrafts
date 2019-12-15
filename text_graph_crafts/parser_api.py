@@ -144,6 +144,9 @@ class StanTorch_API(NLP_API):
                     target = (dep_edge[2].text, dep_edge[2].pos)
                     t = (source,  dep_edge[1], target)
                     #print('DEPEDGE', len(dep_edge),t)
+                    if None in t:
+                      print("BAD EDGE DATA", t)
+                      continue
                     ts.append(t)
                 tss.append(ts)
                 self.tuples = tss
@@ -160,8 +163,14 @@ class StanTorch_API(NLP_API):
                 ps = []
                 for w in s.words:
                     ws.append(w.text)
-                    ls.append(w.lemma)
+                    l=w.lemma
+                    if not l :
+                      l=w.text
+                    ls.append(l)
                     ps.append(w.xpos)
+                if None in ws or None in ls or None in ps:
+                  print("BAD DATA",ls) # when None lemmas returned by parser
+                  # continue
                 wss.append(ws)
                 lss.append(ls)
                 pss.append(ps)
