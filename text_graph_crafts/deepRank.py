@@ -124,6 +124,8 @@ def inDict(w):
 def isCleanSent(sent):
     ok = True
     for w in sent:
+        if not w :
+          return False
         if maybeWord(w):
             continue
         if inDict(w):
