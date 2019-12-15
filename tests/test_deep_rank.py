@@ -1,5 +1,5 @@
 import os
-from text_graph_crafts.deepRank import maybeWord
+from text_graph_crafts.deepRank import maybeWord, isAny, pdf2txt
 from text_graph_crafts import GraphMaker
 from text_graph_crafts.params import *
 
@@ -29,7 +29,7 @@ def runWithFilter(fileName, wk, sk, dk, vk, filter, show=True):
     return gm
 
 
-def test0():  # might talke 1-2 minutes
+def test0():  # might take 1-2 minutes
     gm = runWithFilter('../examples/tesla.txt', wk, sk, 30, 50, maybeWord)
     return gm
 
@@ -52,7 +52,6 @@ def test3():
 
 def test4():
     gm = gm = runWithFilter('../examples/summary.txt', 12, 3, 30, 50, maybeWord)
-    showAllEdges(gm)
     return gm
 
 
@@ -74,7 +73,6 @@ def test7():
 def test8():
     gm = runWithFilter('../examples/test.txt', wk,
                        sk, 20, 50, isAny, show=False)
-    showAllEdges(gm)
     return gm
 
 
