@@ -194,8 +194,8 @@ class GraphMaker:
           self.load(file_name)
         elif text :
           self.digest(text)
-        else :
-          print('*** text OR file_name optional parameter missing')
+        #else :
+          #print('*** text OR file_name optional parameter missing')
 
     # # clear saved state
     def clear(self):
@@ -229,23 +229,7 @@ class GraphMaker:
     def digest(self, text):
         self.clear()
         self.gs = self.api_classname(text).get_all()
-        #
-        # chop = 2**16
-        # gens = []
-        # # deals with files that are too large to be parse at once
-        # while len(text) > chop:
-        #     head = text[:chop]
-        #     text = text[chop:]
-        #     # ppp((head))
-        #     if head:
-        #         hs = list(self.parse(head))
-        #         # ppp('PARSED')
-        #         gens.append(hs)
-        # if gens:
-        #     self.gs = [x for xs in gens for x in xs]
-        # else:
-        #     self.gs = list(self.parse(text))
-        # ppp('!!!',self.gs)
+ 
 
     # sentence as sequence of words generator
     def sentence(self):

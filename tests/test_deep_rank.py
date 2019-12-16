@@ -28,6 +28,10 @@ def runWithFilter(fileName, wk, sk, dk, vk, filter, show=True):
     gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
     return gm
 
+# number of keyphrases
+wk = 5
+# number of summary sentences
+sk = 5
 
 def test0():  # might take 1-2 minutes
     gm = runWithFilter('../examples/tesla.txt', wk, sk, 30, 50, maybeWord)
