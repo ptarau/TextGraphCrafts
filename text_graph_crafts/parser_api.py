@@ -38,11 +38,12 @@ class NLP_API(ABC):
 
 # subclass using Stanford coreNLP
 
+parserURL='http://localhost:9000'
 class CoreNLP_API(NLP_API):
     def __init__(self, text):
         super().__init__(text)
 
-        dparser = CoreNLPDependencyParser(url='http://localhost:9000')
+        dparser = CoreNLPDependencyParser(url=parserURL)
 
         def parse(text) :
           return dparser.parse_text(text)
