@@ -826,3 +826,11 @@ def take(k, seq):
         yield x
         c += 1
 
+def my_path() :
+  if __name__=='__main__' :
+    return "./"
+  else :
+    return __file__
+
+
+#print('deepRank:',my_path())
