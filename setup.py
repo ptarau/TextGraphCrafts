@@ -11,7 +11,7 @@ if __name__ == '__main__':
     with open("README.md","r") as f:
         long_description = f.read()
 
-    version = "0.0.2_a"
+    version = "0.0.3"
     RELEASE_VERSION = True
 
     if not RELEASE_VERSION:
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     setup = _post_install(
           setup(name='text_graph_crafts',
           version=version,
-          description='DeepRank Model: a deep learning approach to relevance ranking in information retrieval ',
+          description='DeepRank ranks text-graphs built using deep-learning trained dependecy parsers',
           long_description = long_description,
           long_description_content_type='text/markdown',
           url='https://github.com/ptarau/TextGraphCrafts.git',
@@ -62,6 +62,6 @@ if __name__ == '__main__':
           packages=['text_graph_crafts'],
           install_requires = required,
           zip_safe=False,
-          setup_requires = ['nltk'],
+          setup_requires = [] #['nltk'],
           )
 )
