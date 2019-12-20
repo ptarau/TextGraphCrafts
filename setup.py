@@ -11,41 +11,13 @@ if __name__ == '__main__':
     with open("README.md","r") as f:
         long_description = f.read()
 
-    version = "0.0.3"
-    RELEASE_VERSION = True
+    version = "0.0.1"
 
-    if not RELEASE_VERSION:
-        # Append incremental version number from git
-        try:
-            version += (
-                ".dev"
-                + subprocess.check_output(["git", "rev-list", "--count", "HEAD"])
-                .decode()
-                .strip()
-            )
-            print(f'version = {version}')
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            # The .git directory has been removed (likely by setup.py sdist),
-            # and/or git is not installed
-            version += ".dev0"
-            print(f'version = {version}')
-
-
+    
     def _post_install(setup):
         def _post_actions():
             print ('--- Post install ---')
-            # import nltk
-            # import platform
-            # if platform.system()=='darwin':
-            #     try:
-            #         import ssl
-            #         _create_unverified_https_context = ssl._create_unverified_context
-            #     except AttributeError:
-            #         pass
-            #     else:
-            #         ssl._create_default_https_context = _create_unverified_https_context
-            # nltk.download()
-
+          
         _post_actions()
         return setup
 

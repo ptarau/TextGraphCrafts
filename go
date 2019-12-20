@@ -1,4 +1,4 @@
 pushd .
 cd tests
-python3 -i tests.py
+python3 -i test.py
 popd

@@ -1,7 +1,7 @@
 import os
-from text_graph_crafts.deepRank import maybeWord, isAny, pdf2txt
-from text_graph_crafts import GraphMaker
-from text_graph_crafts.params import *
+from textcrafts.deepRank import maybeWord, isAny, pdf2txt
+from textcrafts import GraphMaker
+from textcrafts.params import *
 
 def go() :
   gm = GraphMaker(text='The cat sits on the mat.')
