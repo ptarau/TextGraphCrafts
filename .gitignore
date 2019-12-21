@@ -173,17 +173,20 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-
 stanford-corenlp-full-2018-10-05/
 
 examples/*.pro
 examples/*.gv
 examples/*.gv.pdf
+
+pdfs/*.pro
+pdfs/*.gv
+pdfs/*.gv.pdf
+
 test/keys/*
 test/abs/*
 *.gv
 *.gv.pdf
-
 
 
 

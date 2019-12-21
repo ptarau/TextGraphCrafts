@@ -9,6 +9,8 @@ from .sim import *
 
 toolkit = None
 
+print('RUNNING textcrafts',__file__)
+
 if corenlp:
   from  .corenlp_api import CoreNLP_API
   toolkit=CoreNLP_API
@@ -273,7 +275,8 @@ class GraphMaker:
                 #elif rel == 'punct' : continue
                 elif vn:
                     # collects vs and vo links to merge them later into svo
-                    svo_edges_in_sent.append((lfrom, ftag, rel, lto, ttag))
+                    if lfrom != lto :
+                      svo_edges_in_sent.append((lfrom, ftag, rel, lto, ttag))
                     yield lfrom, ftag, rel, lto, ttag  # verb to noun
                     yield k, 'SENT', 'about', lto, ttag  # sent to noun
                     # all words recommend sentence
