@@ -1,4 +1,3 @@
-from nltk.parse.corenlp import CoreNLPDependencyParser
 import networkx as nx
 from collections import defaultdict
 import subprocess
@@ -7,13 +6,19 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .params import *
 from .sim import *
-from .parser_api import CoreNLP_API, StanTorch_API
 
-if corenlp: toolkit=CoreNLP_API
-else: toolkit=StanTorch_API
+toolkit = None
+
+if corenlp:
+  from  .corenlp_api import CoreNLP_API
+  toolkit=CoreNLP_API
+else:
+  from .stanfordnlp_api import StanTorch_API
+  toolkit=StanTorch_API
 
 def ppp(*args): print(args)
 
+ppp("TOOLKIT",toolkit)
 
 def make_word_dict(fname):
     wd = set(words.words())

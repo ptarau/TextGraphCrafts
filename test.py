@@ -34,64 +34,64 @@ wk = 5
 sk = 5
 
 def test0():  # might take 1-2 minutes
-    gm = runWithFilter('../examples/tesla.txt', wk, sk, 30, 50, maybeWord)
+    gm = runWithFilter('examples/tesla.txt', wk, sk, 30, 50, maybeWord)
     return gm
 
 
 def test1():
-    gm = runWithFilter('../examples/bfr.txt', wk, sk, 30, 50, maybeWord)
+    gm = runWithFilter('examples/bfr.txt', wk, sk, 30, 50, maybeWord)
     return gm
 
 
 def test2():
     wk, sk = 3, 3
-    gm = runWithFilter('../examples/hindenburg.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/hindenburg.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 
 def test3():
-    gm = runWithFilter('../examples/const.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/const.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 
 def test4():
-    gm = gm = runWithFilter('../examples/summary.txt', 12, 3, 30, 50, maybeWord)
+    gm = gm = runWithFilter('examples/summary.txt', 12, 3, 30, 50, maybeWord)
     return gm
 
 
 def test5():
-    gm = runWithFilter('../examples/heaven.txt', wk, sk, 30, 50, maybeWord)
+    gm = runWithFilter('examples/heaven.txt', wk, sk, 30, 50, maybeWord)
     return gm
 
 
 def test6():
-    gm = runWithFilter('../examples/einstein.txt', wk, sk, 30, 50, maybeWord)
+    gm = runWithFilter('examples/einstein.txt', wk, sk, 30, 50, maybeWord)
     return gm
 
 
 def test7():
-    gm = runWithFilter('../examples/kafka.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/kafka.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 
 def test8():
-    gm = runWithFilter('../examples/test.txt', wk,
+    gm = runWithFilter('examples/test.txt', wk,
                        sk, 20, 50, isAny, show=False)
     return gm
 
 
 def test9():
-    gm = runWithFilter('../examples/relativity.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/relativity.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 
 def test10():
-    gm = runWithFilter('../examples/cats.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/cats.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 
 def test11():
-    gm = runWithFilter('../examples/wasteland.txt', wk, sk, 20, 50, maybeWord)
+    gm = runWithFilter('examples/wasteland.txt', wk, sk, 20, 50, maybeWord)
     return gm
 
 

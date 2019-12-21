@@ -6,7 +6,7 @@ import math
 abstractive='no'
 pics='no'
 
-corenlp=False
+corenlp=True
 
 # for LINKS, RANKING, SUMMARIES AND KEYPHRASES
 

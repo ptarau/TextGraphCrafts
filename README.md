@@ -1,5 +1,7 @@
 # TextGraphCrafts
-Python-based summary, keyphrase and relation extractor from text documents using dependency graphs
+Python-based summary, keyphrase and relation extractor from text documents using dependency graphs.
+
+HOME: https://github.com/ptarau/TextGraphCrafts
 
 ## Project Description
 
