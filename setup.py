@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 with open("README.md", "r") as f:
   long_description = f.read()
 
-version = "0.0.2"
+version = "0.0.3"
 setup(name='textcrafts',
       version=version,
       description='textcrafts: Summary, keyphrase and relation extraction with dependecy graphs',
