@@ -1,6 +1,8 @@
 import os
 from textcrafts.deepRank import maybeWord, isAny, pdf2txt
-from textcrafts import GraphMaker
+from textcrafts import GraphMaker, craft_params
+
+params= craft_params()
 
 def go() :
   gm = GraphMaker(text='The cat sits on the mat.')
@@ -21,7 +23,7 @@ def testx():
     for w in pr.items(): print(w)
 
 
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=True):
+def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.show):
     gm = GraphMaker(file_name=fileName)
     dotName = os.path.splitext(fileName)[0]+".gv"
     gm.toDot(dk, filter, svo=True, fname=dotName, show=show)

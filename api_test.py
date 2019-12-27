@@ -2,7 +2,7 @@ import os
 import sys
 from textcrafts.deepRank import maybeWord, isAny, pdf2txt
 from textcrafts import GraphMaker
-from textcrafts.params import *
+
 from textcrafts.corenlp_api import *
 from textcrafts.stanfordnlp_api import *
 

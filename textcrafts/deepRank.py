@@ -6,35 +6,32 @@ from nltk.corpus import stopwords
 from graphviz import Digraph
 from .sim import *
 
-#from .params import *
+class craft_params:
+  def __init__(self) :
+    # Graph building, parsing ranking
 
+    self.corenlp=False
 
-class params:
-# Graph building, parsing ranking
+    self.abstractive='no'
+    self.show=False # graph pics?
 
-  abstractive='no'
-  pics='no'
-
-  corenlp=True
-
-  # for LINKS, RANKING, SUMMARIES AND KEYPHRASES
-
-  # sets link addition parameters
-  all_recs  = True  # sentence recommendatations
-  giant_comp = False # only extract from giant comp
-  noun_defs = True
-  noun_self = False
+    # for LINKS, RANKING, SUMMARIES AND KEYPHRASES
+    self.all_recs  = True  # sentence recommendatations
+    self.giant_comp = False # only extract from giant comp
+    self.noun_defs = True
+    self.noun_self = False
 
    # formula for adjusting rank of long or short sentences
-  def adjust_rank(rank,length,avg) :
+  def adjust_rank(self,rank,length,avg) :
     #adjust = 1 + math.sqrt(1 + abs(length - avg))
     adjust = 1 + math.log(1+abs(length-avg))
     newr=rank/adjust
     #print('ADJUST',adjust,length,avg)
     return newr
 
-  def get_toolkit() :
-    if params.corenlp:
+  # choice of toolkit
+  def get_toolkit(self) :
+    if self.corenlp:
       from  .corenlp_api import CoreNLP_API
       toolkit=CoreNLP_API
     else:
@@ -42,7 +39,7 @@ class params:
       toolkit=StanTorch_API
     return toolkit
 
-#toolkit = params.get_toolkit()
+params=craft_params()
 
 print('RUNNING textcrafts',__file__)
 
@@ -220,9 +217,8 @@ def isAny(x):
 
 # class, building and ranking a text graph from a document or string
 
-
 class GraphMaker:
-    def __init__(self,params=params,file_name=None,text=None):
+    def __init__(self,params=params,file_name=None,text=None,corenlp=False):
         self.params=params
         self.api_classname = params.get_toolkit()
         #self.api_classname = api_classname
@@ -606,7 +602,9 @@ class GraphMaker:
                 yield (x, 'is_a', o, sent_id)
 
     # visualize filtered set of edges with graphviz
-    def toDot(self, k, filter, svo=False, show=True, fname='textgraph.gv'):
+    def toDot(self, k, filter, svo=False,
+              show=params.show, fname='textgraph.gv') :
+        if not show : return
         dot = Digraph()
         g = self.graph()
         best = self.bestNodes(k, filter)
@@ -715,7 +713,6 @@ def make_noun_set(d,lss,pss, k):
       if(l) and isNoun(p):
         if not l in d:
           d[l] = k
-          #ppp('NOUN!!!!',l,k)
 
 
 def merge_dict(tuples, d):
@@ -752,7 +749,7 @@ def to_svo(k, rs):
 # extracts highest ranked dk svo relations  and visualizes
 # dk highest ranked filtered word to word edges as dot graph
 # if svo optional arg is set to True, adns svo links to the graph
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.pics == 'yes'):
+def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.show):
   gm = GraphMaker(file_name=fileName)
 
   # for g in gm.gs : ppp(g)
