@@ -4,23 +4,51 @@ import subprocess
 from nltk.corpus import words
 from nltk.corpus import stopwords
 from graphviz import Digraph
-from .params import *
 from .sim import *
 
-toolkit = None
+#from .params import *
+
+
+class params:
+# Graph building, parsing ranking
+
+  abstractive='no'
+  pics='no'
+
+  corenlp=True
+
+  # for LINKS, RANKING, SUMMARIES AND KEYPHRASES
+
+  # sets link addition parameters
+  all_recs  = True  # sentence recommendatations
+  giant_comp = False # only extract from giant comp
+  noun_defs = True
+  noun_self = False
+
+   # formula for adjusting rank of long or short sentences
+  def adjust_rank(rank,length,avg) :
+    #adjust = 1 + math.sqrt(1 + abs(length - avg))
+    adjust = 1 + math.log(1+abs(length-avg))
+    newr=rank/adjust
+    #print('ADJUST',adjust,length,avg)
+    return newr
+
+  def get_toolkit() :
+    if params.corenlp:
+      from  .corenlp_api import CoreNLP_API
+      toolkit=CoreNLP_API
+    else:
+      from .stanfordnlp_api import StanTorch_API
+      toolkit=StanTorch_API
+    return toolkit
+
+#toolkit = params.get_toolkit()
 
 print('RUNNING textcrafts',__file__)
 
-if corenlp:
-  from  .corenlp_api import CoreNLP_API
-  toolkit=CoreNLP_API
-else:
-  from .stanfordnlp_api import StanTorch_API
-  toolkit=StanTorch_API
-
 def ppp(*args): print(args)
 
-ppp("TOOLKIT",toolkit)
+#ppp("TOOLKIT",toolkit)
 
 def make_word_dict(fname):
     wd = set(words.words())
@@ -194,8 +222,10 @@ def isAny(x):
 
 
 class GraphMaker:
-    def __init__(self, api_classname=toolkit,file_name=None,text=None):
-        self.api_classname = api_classname
+    def __init__(self,params=params,file_name=None,text=None):
+        self.params=params
+        self.api_classname = params.get_toolkit()
+        #self.api_classname = api_classname
         self.clear()
         if file_name :
           self.load(file_name)
@@ -250,7 +280,7 @@ class GraphMaker:
         self.svo_edges_in_graph = []
 
         def noun_to_def(x, tx, k):
-            if noun_defs:
+            if self.params.noun_defs:
                 k_ = self.noun_set.get(x)
                 if k == k_:
                     yield (x, tx, 'first_in', k, 'SENT')
@@ -283,20 +313,20 @@ class GraphMaker:
                     # yield lfrom,ftag,'recommends',k,'SENT' # verb to sent - in elif !
                     for e in noun_to_def(lto, ttag, k,):
                         yield e  # noun to sent
-                    if noun_self:
+                    if self.params.noun_self:
                         yield lto, ttag, 'self', lto, ttag
                 elif isNoun(ttag):  # e.g. nmod relation
                     # ppp('x-->n',k,lfrom,ftag,rel,lto,ttag)
                     yield lfrom, ftag, rel, lto, ttag
                     for e in noun_to_def(lto, ttag, k,):
                         yield e  # noun to sent
-                    if noun_self:
+                    if self.params.noun_self:
                         yield lto, ttag, 'self', lto, ttag
                     # yield lfrom, ftag, 'recommends', k, 'SENT' # dependent of noun to sent
                 else:  # yield link as is
                     yield lto, ttag, rel, lfrom, ftag
                     # all words recommend sentence
-                    if all_recs:
+                    if self.params.all_recs:
                         yield lto, ttag, 'recommends', k, 'SENT'
 
                 # merge compound terms, make their parts recommend them
@@ -306,7 +336,7 @@ class GraphMaker:
                     yield lto, ttag, 'fused', comp, ttag
                     for e in noun_to_def(comp, ttag, k):
                         yield e
-                    if noun_self:
+                    if self.params.noun_self:
                         yield comp, ttag, 'self', comp, ttag
             # collect svo relations
             self.svo_edges_in_graph.append(to_svo(k, svo_edges_in_sent))
@@ -352,7 +382,7 @@ class GraphMaker:
         g = self.graph()
         pr = self.runPagerank(g, pers)
         self.ranked = pr
-        if not giant_comp:
+        if not self.params.giant_comp:
             return pr
         ccs = list(nx.strongly_connected_components(g))
         lc = len(ccs)
@@ -418,9 +448,9 @@ class GraphMaker:
         for i_ws in sorted(self.bestSentencesByRank(k, filter=filter)):
             yield i_ws
 
-    def bestSentences(self, k, filter=isAny, with_word_graph=abstractive):
+    def bestSentences(self, k, filter=isAny):
         xs = self.bestSentences0(k, filter=isAny)
-        if with_word_graph == 'yes':
+        if self.params.abstractive == 'yes':
             xs = list(xs)
             pr = self.pagerank()  # make pr an (ordered) dict
             wg = nx.DiGraph()
@@ -497,7 +527,7 @@ class GraphMaker:
             if i in d:
                 l = len(ws)
                 r = d[i]
-                newr = adjust_rank(r, l, avg)
+                newr = self.params.adjust_rank(r, l, avg)
                 d[i] = newr
                 #if l<6 : ppp(r,'--->',newr,l,'ws=',ws)
                 i += 1
@@ -722,7 +752,7 @@ def to_svo(k, rs):
 # extracts highest ranked dk svo relations  and visualizes
 # dk highest ranked filtered word to word edges as dot graph
 # if svo optional arg is set to True, adns svo links to the graph
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=pics == 'yes'):
+def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.pics == 'yes'):
   gm = GraphMaker(file_name=fileName)
 
   # for g in gm.gs : ppp(g)
