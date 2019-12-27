@@ -219,6 +219,7 @@ def isAny(x):
 
 class GraphMaker:
     def __init__(self,params=params,file_name=None,text=None,corenlp=False):
+        print("PARAMS CLASS",params)
         self.params=params
         self.api_classname = params.get_toolkit()
         #self.api_classname = api_classname
@@ -444,6 +445,7 @@ class GraphMaker:
         for i_ws in sorted(self.bestSentencesByRank(k, filter=filter)):
             yield i_ws
 
+
     def bestSentences(self, k, filter=isAny):
         xs = self.bestSentences0(k, filter=isAny)
         if self.params.abstractive == 'yes':
@@ -478,6 +480,8 @@ class GraphMaker:
 
         for s_ws in xs:
             yield s_ws
+
+
 
     # specialization returning best k word nodes
     def bestWords(self, k):
@@ -744,6 +748,33 @@ def to_svo(k, rs):
     #for x in svo : ppp(k,'GOT SVO',x)
     return svo
 
+def word_graph(g, pr, s_ws):
+      pr = dict(pr)
+      s, ws0 = s_ws
+      ws = [w for w in ws0 if not isStopWord(w)]
+      l = len(ws)
+      for i in range(0, l - 1):
+        f = ws[i]
+        t = ws[i + 1]
+        r1 = pr.get(f)
+        if not r1: r1 = pr.get(f.lower())
+        r2 = pr.get(t)
+        if not r2: r2 = pr.get(f.lower())
+        if not r1: r1 = 0
+        if not r2: r2 = 0
+        r = 0
+        if not r1:
+          r = r2
+        elif not r2:
+          r = r1
+        else:
+          r = (r1 + r2) / 2  # we will be looking for shortest
+        if r == 0:
+          r = float('inf')
+        else:
+          r = math.exp(1 - r)
+        g.add_edge(f, t, weight=r)
+        # print("EDGE",(f,t,r))
 
 # shows wk summaries and sk keywords from file
 # extracts highest ranked dk svo relations  and visualizes
