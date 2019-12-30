@@ -9,14 +9,14 @@ class StanTorch_API(NLP_API):
     def start_pipeline():
         mfile = os.getenv("HOME") + \
             '/stanfordnlp_resources/en_ewt_models'
+        if not os.path.exists(mfile):
+          stanfordnlp.download('en', confirm_if_exists=True, force=True)
         sout = sys.stdout
         serr = sys.stderr
         f = open(os.devnull, 'w')
         sys.stdout = f
         sys.stderr = f
         # turn output off - too noisy
-        if not os.path.exists(mfile):
-            stanfordnlp.download('en', confirm_if_exists=True)
         nlp = stanfordnlp.Pipeline()
         sys.stdout = sout
         sys.stderr = serr

@@ -221,7 +221,7 @@ def isAny(x):
 
 class GraphMaker:
     def __init__(self,params=params,file_name=None,text=None,corenlp=False):
-        print("PARAMS CLASS",params)
+        print("PARAMETER CLASS:",type(params).__name__)
         self.params=params
         self.api_classname = params.get_toolkit()
         #self.api_classname = api_classname

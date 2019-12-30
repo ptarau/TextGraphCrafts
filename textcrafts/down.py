@@ -1,7 +1,14 @@
-import nltk
 import ssl
+import sys
+import os
+import nltk
 
 def ensure_nlk_downloads() :
+  sout = sys.stdout
+  serr = sys.stderr
+  f = open(os.devnull, 'w')
+  sys.stdout = f
+  sys.stderr = f
   try:
     _create_unverified_https_context = ssl._create_unverified_context
   except AttributeError:
@@ -12,5 +19,9 @@ def ensure_nlk_downloads() :
   nltk.download('words')
   nltk.download('wordnet')
   nltk.download('stopwords')
+
+  # turn output off - too noisy
+  sys.stdout = sout
+  sys.stderr = serr
 
 ensure_nlk_downloads()
