@@ -1,10 +1,12 @@
 import networkx as nx
 from collections import defaultdict
 import subprocess
+from .down import ensure_nlk_downloads
 from nltk.corpus import words
 from nltk.corpus import stopwords
 from graphviz import Digraph
 from .sim import *
+
 
 class craft_params:
   def __init__(self) :
