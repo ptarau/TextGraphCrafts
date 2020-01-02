@@ -19,6 +19,7 @@ def ensure_nlk_downloads() :
   nltk.download('words')
   nltk.download('wordnet')
   nltk.download('stopwords')
+  nltk.download('punct')
 
   # turn output off - too noisy
   sys.stdout = sout

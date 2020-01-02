@@ -23,6 +23,11 @@ class craft_params:
     self.noun_defs = True
     self.noun_self = False
 
+    self.sent_count=3
+    self.word_count=5
+    self.rel_count=10
+    self.dot_count=20
+
    # formula for adjusting rank of long or short sentences
   def adjust_rank(self,rank,length,avg) :
     #adjust = 1 + math.sqrt(1 + abs(length - avg))
@@ -646,22 +651,22 @@ class GraphMaker:
     def allToDot(self, k):
         self.toDot(k, lambda x: True)
 
-    def keyphrases(self, sk):
+    def keyphrases(self):
         L = ['--- KEYPHRASES ---']
-        for w in self.bestWords(sk):
+        for w in self.bestWords(params.word_count):
             L.append(w + ';')
         return '\n'.join(L)
 
-    def summary(self, sk):
+    def summary(self):
         L = ['--- SUMMARY ---']
-        for s in self.bestSentences(sk):
+        for s in self.bestSentences(params.sent_count):
             n, ws = s
             L.append(f'{n} : ' + ''.join([' '+w for w in ws]))
         return '\n'.join(L)
 
-    def relations(self, vk):
+    def relations(self) :
         L = ['--- RELATIONS ---']
-        L.extend(list(map(str, self.bestSVOs(vk))))
+        L.extend(list(map(str, self.bestSVOs(params.rel_count))))
         return '\n'.join(L)
 
     def __repr__(self):
@@ -669,9 +674,9 @@ class GraphMaker:
         s.append('--- GraphMaker object ---')
         s.append(f'nodes: {self.graph().number_of_nodes()}')
         s.append(f'edges: {self.graph().number_of_edges()}')
-        s.append(self.keyphrases(5))
-        s.append(self.summary(5))
-        s.append(self.relations(5))
+        s.append(self.keyphrases())
+        s.append(self.summary())
+        s.append(self.relations())
         s.append(80*'-')
         return '\n'.join(s)
 
@@ -778,13 +783,15 @@ def word_graph(g, pr, s_ws):
         g.add_edge(f, t, weight=r)
         # print("EDGE",(f,t,r))
 
-# shows wk summaries and sk keywords from file
+# shows summaries and keywords from file
 # extracts highest ranked dk svo relations  and visualizes
 # dk highest ranked filtered word to word edges as dot graph
 # if svo optional arg is set to True, adns svo links to the graph
-def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.show):
+def runWithFilter(fileName,filter=(lambda x: True)):
   gm = GraphMaker(file_name=fileName)
+  print(gm)
 
+  '''
   # for g in gm.gs : ppp(g)
   # ppp(list(gm.sentence()))
   # ppp(list(gm.lsentence()))
@@ -798,29 +805,31 @@ def runWithFilter(fileName, wk, sk, dk, vk, filter, show=params.show):
   print('nodes:', gm.graph().number_of_nodes())
   print('edges:', gm.graph().number_of_edges())
   print('')
-  print_keys(gm.bestWords(wk))
+  print_keys(gm.bestWords(params.key_count))
   print('SUMMARY')
   print_summary(gm.bestSentences(sk))
   print_rels(gm.bestSVOs(vk))
+  '''
   dotName = trimSuf(fileName) + ".gv"
-  gm.toDot(dk, filter, svo=True, fname=dotName, show=show)
+  gm.toDot(dk, filter, svo=True, fname=dotName, show=params.show)
   return gm
 
-
-# same, with default values
-def runWith(fileName):
-    runWithFilter(fileName, 12, 8, 20, lambda x: True)
 
 
 def print_summary(xs):
     for s in xs:
-        n, ws = s
-        print(n, ':', end='')
-        for w in ws:
-            print(' ', w, end='')
-        print('')
+      n, ws = s
+      print(n, ':', end='')
+      for w in ws:
+        print(' ', w, end='')
+      print('')
     print('')
 
+
+'''
+# same, with default values
+def runWith(fileName):
+    runWithFilter(fileName)
 
 def print_keys(ws):
     print('KEYPHRASES')
@@ -836,7 +845,7 @@ def print_rels(rs):
             print(w, ' ', end='')
         print('')
     print('\n')
-
+'''
 
 def showAllEdges(g, file_name='textgraph.gv'):
     dot = Digraph()
@@ -855,7 +864,6 @@ def query_edges_to_dot(qgm):
 
 
 def showGraph(dot, show=True, file_name='textgraph.gv'):
-
     dot.render(file_name, view=show)
 
 
