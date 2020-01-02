@@ -784,37 +784,15 @@ def word_graph(g, pr, s_ws):
         # print("EDGE",(f,t,r))
 
 # shows summaries and keywords from file
-# extracts highest ranked dk svo relations  and visualizes
-# dk highest ranked filtered word to word edges as dot graph
+# extracts highest ranked svo relations  and visualizes
+# highest ranked filtered word to word edges as dot graph
 # if svo optional arg is set to True, adns svo links to the graph
 def runWithFilter(fileName,filter=(lambda x: True)):
   gm = GraphMaker(file_name=fileName)
   print(gm)
-
-  '''
-  # for g in gm.gs : ppp(g)
-  # ppp(list(gm.sentence()))
-  # ppp(list(gm.lsentence()))
-  # ppp(list(gm.edges()))
-  # for g in gm.gs : ppp(list(g.triples()))
-  # ppp(gm.graph().edges())
-  # for p in gm.pagerank().items() : ppp(p)
-  print("------PROCESSING:", fileName, "----------")
-  print('noun_defs = ', noun_defs)
-  print('all_recs = ', all_recs)
-  print('nodes:', gm.graph().number_of_nodes())
-  print('edges:', gm.graph().number_of_edges())
-  print('')
-  print_keys(gm.bestWords(params.key_count))
-  print('SUMMARY')
-  print_summary(gm.bestSentences(sk))
-  print_rels(gm.bestSVOs(vk))
-  '''
   dotName = trimSuf(fileName) + ".gv"
-  gm.toDot(dk, filter, svo=True, fname=dotName, show=params.show)
+  gm.toDot(params.dot_count, filter, svo=True, fname=dotName, show=params.show)
   return gm
-
-
 
 def print_summary(xs):
     for s in xs:
@@ -824,28 +802,6 @@ def print_summary(xs):
         print(' ', w, end='')
       print('')
     print('')
-
-
-'''
-# same, with default values
-def runWith(fileName):
-    runWithFilter(fileName)
-
-def print_keys(ws):
-    print('KEYPHRASES')
-    for w in ws:
-        print(w, ';')
-    print('\n')
-
-
-def print_rels(rs):
-    print('RELATIONS')
-    for r in rs:
-        for w in r:
-            print(w, ' ', end='')
-        print('')
-    print('\n')
-'''
 
 def showAllEdges(g, file_name='textgraph.gv'):
     dot = Digraph()
@@ -862,10 +818,8 @@ def query_edges_to_dot(qgm):
 
     # displays textgraph with graphviz
 
-
 def showGraph(dot, show=True, file_name='textgraph.gv'):
     dot.render(file_name, view=show)
-
 
 def gshow(g, **kwargs):
     dot = Digraph()
