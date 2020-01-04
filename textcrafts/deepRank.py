@@ -161,6 +161,7 @@ def inDict(w):
 
 
 def isCleanSent(sent):
+    if len(sent) < 3 : return False
     ok = True
     for w in sent:
         if not w :
