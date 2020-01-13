@@ -25,8 +25,11 @@ def testy():
 
 def runWithFilter(fileName,filter=maybeWord):
     gm = GraphMaker(file_name=fileName)
-    dotName = os.path.splitext(fileName)[0]+".gv"
+    fname=os.path.splitext(fileName)[0]
+    dotName = fname+".gv"
+    cloudName=fname+"_cloud.pdf"
     gm.toDot(params.dot_count, filter, svo=True, fname=dotName, show=params.show)
+    gm.kshow(params.dot_count,file_name=cloudName,show=params.show)
     return gm
 
 def test0():  # might take 1-2 minutes

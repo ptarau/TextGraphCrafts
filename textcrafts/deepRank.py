@@ -6,7 +6,7 @@ from nltk.corpus import words
 from nltk.corpus import stopwords
 from graphviz import Digraph
 from .sim import *
-
+from .vis import *
 
 class craft_params:
   def __init__(self) :
@@ -505,6 +505,12 @@ class GraphMaker:
                 yield(w)
                 #ppp('BWORD',w)
             c += 1
+
+    def kshow(self,k,file_name="cloud.pdf",show=params.show):
+      d=dict()
+      for w in self.bestWords(k) :
+        d[w]=self.pagerank()[w]
+      show_ranks(d,file_name=file_name,show=show)
 
     # true if a phrase has a noun in it
     def hasNoun(self, w):
