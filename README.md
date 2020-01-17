@@ -28,6 +28,7 @@ to collect the desired nltk resource files.
 - ```pip3 install requests```
 - ```pip3 install graphviz```, also ensure .gv files can be viewed
 - ```pip3 install stanfordnlp``` parser
+- Note that ```stanfordnlp ``` requires torch binaries which are easier to instal with ````anaconda```.
 
 Tested with the above on a Mac, with macOS Mojave and Catalina and on Ubuntu Linux 18.x.
 
@@ -36,15 +37,9 @@ Tested with the above on a Mac, with macOS Mojave and Catalina and on Ubuntu Lin
  *start_server.sh*
 #### in another shell window, start with
 
-```python3 -i deepRank.py```
+```python3 -i tests.py```
 
-or by typing 
-
-```python3 -i go.py```
-
-to launch a script doing the same. 
-
-#### interactively, at the ">>>" prompt, try
+and then interactively, at the ">>>" prompt, try
 
 ```
 >>> test1()
@@ -80,7 +75,7 @@ other global parameter settings.
 
 - install [Stanford CoreNLP](https://stanfordnlp.github.io/CoreNLP/) and unzip in a derictory of your choice (ag., the local directory)
 - edit if needed ```start_parser.sh``` with the location of the parser directory
-- edit params.py and set ```corenlp=True```
+- override the ```params``` class and set ```corenlp=True```
 
 *Note however that the Stanford CoreNLP is GPL-licensed, which can place restrictions on proprietary software activating this option.*
 

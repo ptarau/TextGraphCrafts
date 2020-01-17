@@ -1,3 +1,4 @@
+python >=3.6.9
 stanfordnlp>=0.2.0
 graphviz>=0.13
 nltk>=3.4.5
