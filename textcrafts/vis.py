@@ -25,15 +25,8 @@ def show_ranks(rank_dict,file_name="cloud.pdf",show=True) :
   plt.imshow(cloud, interpolation='bilinear')
   plt.axis("off")
   # plt.show()
-  '''
-  if exists_file(file_name) :
-    for i in range(6):
-      fname = file_name.replace("quest_cloud","quest_cloud"+str(i))
-      if not exists_file(fname) :
-        file_name=fname
-        break
-  '''
   f.savefig(file_name,bbox_inches='tight')
+  plt.close('all')
 
 if __name__=="__main__":
   d = {'a': 0.1, 'b': 0.2, 'c': 0.33, 'd': 0.2}

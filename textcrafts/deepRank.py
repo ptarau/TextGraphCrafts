@@ -825,7 +825,7 @@ def query_edges_to_dot(qgm):
 
     # displays textgraph with graphviz
 
-def showGraph(dot, show=True, file_name='textgraph.gv'):
+def showGraph(dot, show=False, file_name='textgraph.gv'):
     dot.render(file_name, view=show)
 
 def gshow(g, **kwargs):
