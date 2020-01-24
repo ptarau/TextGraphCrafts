@@ -125,7 +125,7 @@ def go() :
   print(test9())
   print(test10())
   print(test11())
-  print(test12())
+  #print(test12())
   print(test0())
 
 
