@@ -13,7 +13,7 @@ class craft_params:
   def __init__(self) :
     # Graph building, parsing ranking
 
-    self.corenlp=False
+    self.corenlp=True
 
     self.abstractive='no'
     self.show=False # graph pics?
